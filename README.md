@@ -9,15 +9,15 @@
   <br />
   <br />
 
-  # 🤖 Conceptual Gap - Detector
+  # 🤖 GapSight - Clarity Beyond Correctness
   ### The AI-Powered Concept Gap Detector
 
   <p align="center">
     <b>Identify knowledge gaps. Diagnose misunderstandings. Master concepts faster.</b>
     <br />
-    Code-Tutor is an advanced AI learning assistant that doesn't just answer questions—it analyzes <i>how</i> you understand them. By leveraging Google's Gemini AI and real-time data synchronization with Supabase, it provides instant, personalized feedback to bridge the gap between confusion and clarity.
+    GapSight is an advanced AI learning assistant that doesn't just answer questions—it analyzes <i>how</i> you understand them. By leveraging Google's Gemini AI and real-time data synchronization with Supabase, it provides instant, personalized feedback to bridge the gap between confusion and clarity.
   </p>
-  <b>Deployed Vercel App - https://ai-concept-gap-detecting-agent.vercel.app </b>
+  
 </div>
 
 ---
@@ -170,5 +170,5 @@ Distributed under the MIT License. See `LICENSE` for more information.
 
 <br />
 <div align="center">
-  <p>Built with ❤️ by Fusion AI</p>
+  <p>Built with ❤️ by ResQtech</p>
 </div>
