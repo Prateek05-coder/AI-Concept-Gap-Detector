@@ -13,6 +13,16 @@ import {
 } from 'lucide-react';
 import { HistoryItem } from '../../types/debugger';
 import { useAuth } from '@/contexts/AuthContext';
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 interface SidebarProps {
     history: HistoryItem[];
@@ -26,6 +36,8 @@ export const Sidebar: React.FC<SidebarProps> = ({ history, onSelectSession, onNe
     const { user, signOut } = useAuth();
     const [isOnline, setIsOnline] = useState(navigator.onLine);
     const [apiStatus, setApiStatus] = useState<'connected' | 'disconnected'>('connected');
+    const [deleteId, setDeleteId] = useState<string | null>(null);
+    const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
     useEffect(() => {
         const handleOnline = () => setIsOnline(true);
@@ -112,7 +124,11 @@ export const Sidebar: React.FC<SidebarProps> = ({ history, onSelectSession, onNe
                                         {item.topic}
                                     </h3>
                                     <button
-                                        onClick={(e) => { e.stopPropagation(); onDeleteSession(item.id); }}
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            setDeleteId(item.id);
+                                            setIsDeleteDialogOpen(true);
+                                        }}
                                         className="opacity-0 group-hover/item:opacity-100 text-gray-500 hover:text-red-400 transition-all ml-2"
                                     >
                                         <Trash2 className="w-3 h-3" />
@@ -183,6 +199,31 @@ export const Sidebar: React.FC<SidebarProps> = ({ history, onSelectSession, onNe
                     </div>
                 )}
             </div>
+
+            <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+                <AlertDialogContent>
+                    <AlertDialogHeader>
+                        <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                        <AlertDialogDescription>
+                            This action cannot be undone. This will permanently delete this scan session.
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                        <AlertDialogCancel onClick={() => setDeleteId(null)}>Cancel</AlertDialogCancel>
+                        <AlertDialogAction
+                            className="bg-red-500 hover:bg-red-600"
+                            onClick={() => {
+                                if (deleteId) {
+                                    onDeleteSession(deleteId);
+                                    setDeleteId(null);
+                                }
+                            }}
+                        >
+                            Delete
+                        </AlertDialogAction>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
 
         </div>
     );
