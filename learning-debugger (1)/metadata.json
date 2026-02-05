@@ -1,0 +1,5 @@
+{
+  "name": "Learning Debugger",
+  "description": "A dark-themed, AI-powered learning assistant that analyzes your understanding of concepts and identifies knowledge gaps using Gemini.",
+  "requestFramePermissions": []
+}

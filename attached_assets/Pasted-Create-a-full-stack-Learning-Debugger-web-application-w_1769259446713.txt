@@ -1,0 +1,124 @@
+Create a full-stack "Learning Debugger" web application with the following specifications:
+
+## PROJECT OVERVIEW
+Build an AI-powered educational diagnostic tool that analyzes student explanations to identify knowledge gaps and missing prerequisites.
+
+## TECH STACK
+- Backend: FastAPI (Python)
+- Frontend: Streamlit (Python)
+- AI: Google Gemini 2.0 Flash API
+- Communication: httpx
+
+## ARCHITECTURE REQUIREMENTS
+
+### Backend (main.py)
+Create a FastAPI application with these endpoints:
+
+1. POST /diagnose
+   - Accept: concept_name (string), user_explanation (string), session_id (optional string)
+   - Process: Send to Gemini API with engineered system prompt
+   - Return: Structured JSON with root_cause, confidence (0-100), repair_question, missing_prerequisites (array), knowledge_coverage (0-100), session_id, diagnosis_id, timestamp
+
+2. GET /history/{session_id}
+   - Return: All diagnostics for a session (last 20 max)
+
+3. DELETE /history/{session_id}
+   - Clear session history
+
+4. GET /health
+   - Return: Service health status and Gemini API connection
+
+### System Prompt Engineering
+The backend must send this system prompt to Gemini:
+
+"You are an elite Educational Diagnostician AI specializing in prerequisite knowledge analysis.
+
+Your mission: Identify the EXACT point of conceptual failure in a student's explanation.
+
+ANALYSIS PROTOCOL:
+1. Parse the student's explanation for logical gaps
+2. Identify the EARLIEST missing prerequisite concept
+3. Assign a confidence score (0-100) based on clarity of the gap
+4. Generate a targeted repair question that isolates the root cause
+5. List ALL missing prerequisites in order of dependency
+
+RESPONSE FORMAT (JSON ONLY - NO MARKDOWN):
+{
+  'root_cause': 'The fundamental missing concept (be specific)',
+  'confidence': 85,
+  'repair_question': 'A precise question to reveal the gap',
+  'missing_prerequisites': ['Concept A', 'Concept B'],
+  'knowledge_coverage': 65
+}
+
+RULES:
+- Be surgical, not general
+- Focus on the FIRST domino that fell
+- Confidence reflects clarity of diagnosis
+- Knowledge coverage is % of prerequisites demonstrated
+- NO preamble, NO markdown, ONLY valid JSON"
+
+### Backend Implementation Requirements
+- Use Pydantic models for request/response validation
+- Implement error handling for Gemini API timeouts (30s timeout)
+- Store diagnostic history in memory (dictionary keyed by session_id)
+- Enable CORS for frontend communication
+- Parse Gemini responses safely (handle markdown code blocks in JSON)
+- Generate UUID for session_id and diagnosis_id
+
+### Frontend (app.py)
+Create a Streamlit application with premium dark theme UI:
+
+#### UI Design Requirements
+- **Theme**: Dark purple gradient background (colors: #0f0c29, #302b63, #24243e)
+- **Glassmorphism sidebar**: Transparent backdrop with blur effect
+- **Custom CSS cards**: For diagnostic results with rounded corners, shadows, and gradients
+- **Color scheme**: Purple accents (#9d4edd, #7b2cbf, #c77dff)
+
+#### Layout Structure
+1. **Sidebar**:
+   - Backend health status indicator (🟢 Connected / 🔴 Disconnected)
+   - Session ID display (truncated)
+   - Diagnostic history (last 10 items in expandable cards)
+   - Refresh and Clear history buttons
+
+2. **Main Content** (2 tabs):
+   
+   Tab 1 - "New Diagnosis":
+   - Text input: Concept name
+   - Text area: User explanation (200px height)
+   - Analyze button (primary, purple gradient)
+   - Clear button
+
+   Tab 2 - "Results":
+   - Diagnostic result card with:
+     - Header: Concept name and diagnosis ID
+     - Three metric cards in a row: Confidence %, Knowledge Coverage %, Gaps Found
+     - Root Cause section (info box)
+     - Repair Question section (warning box)
+     - Missing Prerequisites list (numbered)
+     - Knowledge Coverage progress bar
+   - Action buttons: New Diagnosis, Download JSON
+
+#### Frontend Functionality
+- Check backend health on load (GET /health)
+- Store session_id in st.session_state
+- Send diagnostic requests via httpx POST to localhost:8000/diagnose
+- Display loading spinner during API calls
+- Handle errors gracefully with user-friendly messages
+- Fetch and display history from backend
+- Export diagnostic results as JSON download
+
+### Styling Requirements
+Use custom CSS for:
+- Remove default Streamlit padding
+- Glassmorphism effects (backdrop-filter: blur)
+- Card containers with gradients and shadows
+- Hover effects on buttons (transform, glow)
+- Custom progress bars (purple gradient)
+- Metric cards with large centered numbers
+- Responsive layout
+
+## ENVIRONMENT SETUP
+
+### Required Dependencies (requirements.txt)

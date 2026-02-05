@@ -1,0 +1,6 @@
+
+> rest-express@1.0.0 check
+> tsc
+
+client/src/services/geminiService.ts(16,38): error TS1127: Invalid character.
+client/src/services/geminiService.ts(147,1): error TS1160: Unterminated template literal.
